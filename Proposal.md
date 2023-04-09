@@ -19,16 +19,22 @@ The development of the program will be split into two phases, with two programme
 Phase 1:
 
 Design and planning: 2 weeks
+
 Basic password manager functionality: 4 weeks
+
 Biometric authentication: 4 weeks
+
 Automatic password change: 4 weeks
 
 
 Phase 2:
 
 Limited support for certain devices: 4 weeks
+
 Customization options: 4 weeks
+
 Integration with other security tools: 4 weeks
+
 Categorization of services based on security requirements to the user: 4 weeks
 
 # Marketing Strategy
