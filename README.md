@@ -22,13 +22,13 @@ Adham:
 
 •	Define the Password Manager Data Structure.
 •	Implement Cryptography: Encryption and decryption functions, and biometric authentication.
-•	Implement Password Generation Function.
+•	Add User Input and Output Functions.
 •	Implement Error Handling Functions.
 •	Add Customization Options.
 
 Abdallah:
 
-•	Add User Input and Output Functions.
+•	Implement Password Generation Function.
 •	Implement Automatic Password Change Function.
 •	Implement File Handling.
 •	Implement Search and Retrieve Function.
@@ -50,3 +50,11 @@ Instead of storing the encrypted passwords in a file, you can store them in a se
 Use secure input and output functions to prevent attackers from intercepting the user's input or output. For example, use functions like getpass() to get the user's password instead of the standard input function.
 
 Implement error handling and logging functions to detect and log errors and unusual activity. This can help to identify potential security breaches and improve the overall security of the program.
+
+
+# Timeline
+
+By the end of Monday 10/4:
+
+Define the Password Manager Data Structure: This is the foundation of the program and should be designed with security in mind. (Adham)
+Implement File Handling: Functions should be added to read and write encrypted credentials to a file. (Abdallah)
