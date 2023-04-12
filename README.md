@@ -51,6 +51,7 @@ Use secure input and output functions to prevent attackers from intercepting the
 
 Implement error handling and logging functions to detect and log errors and unusual activity. This can help to identify potential security breaches and improve the overall security of the program.
 
+Add two-factor authentication to the program as a second layer of security. Like Google's safe device or Google Authenticator.
 
 # Timeline
 
