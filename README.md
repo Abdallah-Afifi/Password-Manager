@@ -14,7 +14,7 @@
 10.	Add Two-Factor Authentication: Two-factor authentication should be implemented to enhance the security of the program.
 11.	Add Integration with Other Security Tools: Functions should be added to allow the program to communicate with other security tools, such as anti-virus software or firewalls.
 12.	Add Limited Sharing Options: A sharing function should be added to allow users to share passwords securely with multiple users.
-!3. Add Screenshotting limitation.
+13. Add Screenshotting limitation.
 
 
 # Tasks
