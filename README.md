@@ -54,6 +54,8 @@ Implement error handling and logging functions to detect and log errors and unus
 
 Add two-factor authentication to the program as a second layer of security. Like Google's safe device or Google Authenticator.
 
+You can use AES with adjusting the Key length and complexity to ensure effiecinecy, security, and performance. 
+
 # Timeline
 
 By the end of Monday 10/4:
