@@ -1,104 +1,73 @@
 #include <iostream>
 #include <string>
-#include <unordered_set>
 #include <chrono>
-#include <vector>
 #include <random>
 #include <algorithm>
 
 // Generate a random password of a specified length using a given character set
-std::string generate_password(int length, const std::unordered_set<char>& all_characters) {
-    std::string filtered_password;
-    std::vector<char> character_vector(all_characters.begin(), all_characters.end());
+std::string generate_password(int length, const std::string& all_characters, std::mt19937_64& generator) {
+    std::string filtered_password(length, ' ');
 
-    std::random_device rd;
-    std::mt19937_64 generator(rd());
-    std::uniform_int_distribution<int> distribution(0, character_vector.size() - 1);
-
-    // Define minimum requirements
-    int min_uppercase = 1;
-    int min_lowercase = 1;
-    int min_numbers = 1;
-    int min_special_chars = 1;
+    int frequency[4] = {1, 1, 1, 1};  // Uppercase, lowercase, numbers, special characters
 
     // Generate password
-    while (filtered_password.length() < length) {
-        int index = distribution(generator);
-        char c = character_vector[index];
-        filtered_password += c;
+    for (int i = 0; i < length; ++i) {
+        int index = std::uniform_int_distribution<int>(0, all_characters.size() - 1)(generator);
+        char c = all_characters[index];
+        filtered_password[i] = c;
 
-        // Check and decrement minimum requirements
         if (std::isupper(c)) {
-            min_uppercase--;
+            --frequency[0];
         } else if (std::islower(c)) {
-            min_lowercase--;
+            --frequency[1];
         } else if (std::isdigit(c)) {
-            min_numbers--;
+            --frequency[2];
         } else {
-            min_special_chars--;
+            --frequency[3];
+        }
+
+        // Check for common patterns during generation
+        if (i > 0 && filtered_password[i] == filtered_password[i - 1]) {
+            i = -1;  // Restart the generation loop
+            std::fill(std::begin(frequency), std::end(frequency), 1);
         }
     }
 
-    // Exclude common patterns
-    while (filtered_password.find("00") != std::string::npos || 
-           filtered_password.find("11") != std::string::npos ||
-           filtered_password.find("22") != std::string::npos ||
-           filtered_password.find("33") != std::string::npos ||
-           filtered_password.find("44") != std::string::npos ||
-           filtered_password.find("55") != std::string::npos ||
-           filtered_password.find("66") != std::string::npos ||
-           filtered_password.find("77") != std::string::npos ||
-           filtered_password.find("88") != std::string::npos ||
-           filtered_password.find("99") != std::string::npos) {
-        filtered_password = generate_password(length, all_characters);
-    }
-
-    // Shuffle the password
-    std::shuffle(filtered_password.begin(), filtered_password.end(), generator);
-
-    // Check and add missing characters to meet minimum requirements
+    // Add missing characters to meet minimum requirements
     std::string missing_chars;
-    if (min_uppercase > 0) missing_chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    if (min_lowercase > 0) missing_chars += "abcdefghijklmnopqrstuvwxyz";
-    if (min_numbers > 0) missing_chars += "0123456789";
-    if (min_special_chars > 0) missing_chars += "!@#$%^&*()_+={}[]\\|;:'\",.<>/?";
+    if (frequency[0] > 0) missing_chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    if (frequency[1] > 0) missing_chars += "abcdefghijklmnopqrstuvwxyz";
+    if (frequency[2] > 0) missing_chars += "0123456789";
+    if (frequency[3] > 0) missing_chars += "!@#$%^&*()_+={}[]\\|;:'\",.<>/?";
 
     if (!missing_chars.empty()) {
         std::shuffle(missing_chars.begin(), missing_chars.end(), generator);
-        filtered_password += missing_chars.substr(0, std::max(0, min_uppercase + min_lowercase + min_numbers + min_special_chars));
+        filtered_password += missing_chars.substr(0, frequency[0] + frequency[1] + frequency[2] + frequency[3]);
     }
 
     return filtered_password;
 }
 
-
 int main() {
-    std::unordered_set<char> all_characters{
-        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-        'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-        '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+',
-        '=', '{', '}', '[', ']', '\\', '|', ';', ':', '\'', '\"', ',',
-        '.', '<', '>', '?', '/'
-    };
+    const std::string all_characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+={}[]\\|;:'\",.<>/?";
 
-    int passwordLength = (rand() % 24 ) + 16;
-   
+    int passwordLength = 24;
+
+    std::random_device rd;
+    std::mt19937_64 generator(rd());
+
     auto startTime = std::chrono::high_resolution_clock::now();
 
-    std::string password = generate_password(passwordLength, all_characters);
+    std::string password = generate_password(passwordLength, all_characters, generator);
 
     auto endTime = std::chrono::high_resolution_clock::now();
     auto durationmic = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
     auto durationmil = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
 
-    std::cout << "Password Length: " << passwordLength << std::endl; 
+    std::cout << "Password Length: " << passwordLength << std::endl;
     std::cout << "Generated password: " << password << std::endl;
     std::cout << "Execution time: " << durationmic.count() << " microseconds" << std::endl;
     std::cout << "Execution time: " << durationmil.count() << " milliseconds" << std::endl;
-
 
     return 0;
 }
